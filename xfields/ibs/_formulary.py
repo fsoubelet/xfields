@@ -249,5 +249,5 @@ def _assert_accepted_context(ctx: xo.context.XContext):
     get the alive particles.
     """
     assert not isinstance(ctx, xo.ContextPyopencl), (
-        "PyOpenCL context is not supported for IBS. " "Please use either the CPU or CuPy context."
+        "PyOpenCL context is not supported for IBS. Please use either the CPU or CuPy context."
     )
