@@ -65,6 +65,9 @@ def _sigma_delta(particles: xt.Particles) -> float:
     return float(nplike.std(particles.delta[particles.state > 0]))
 
 
+# TODO: this is skewed by the Dy where we compute
+# Use compiled code to query the current value?
+# (See Frederik code from xcoll? Would duplicate code)
 def _sigma_x(particles: xt.Particles) -> float:
     """
     Get the horizontal coordinate standard deviation
@@ -75,6 +78,9 @@ def _sigma_x(particles: xt.Particles) -> float:
     return float(nplike.std(particles.x[particles.state > 0]))
 
 
+# TODO: this is skewed by the Dy where we compute
+# Use compiled code to query the current value?
+# (See Frederik code from xcoll? Would duplicate code)
 def _sigma_y(particles: xt.Particles) -> float:
     """
     Get the vertical coordinate standard deviation
@@ -85,6 +91,8 @@ def _sigma_y(particles: xt.Particles) -> float:
     return float(nplike.std(particles.y[particles.state > 0]))
 
 
+# TODO: this uses skewed sigma_x calculation (see above)
+# Use the compiled version of Frederik from xcoll? Would duplicate code
 def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     """
     Horizontal geometric emittance at a location in the machine,
@@ -96,6 +104,8 @@ def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     return float((sigma_x**2 - (dx * sig_delta) ** 2) / betx)
 
 
+# TODO: this uses skewed sigma_y calculation (see above)
+# Use the compiled version of Frederik from xcoll? Would duplicate code
 def _gemitt_y(particles: xt.Particles, bety: float, dy: float) -> float:
     """
     Vertical geometric emittance at a location in the machine,
@@ -198,6 +208,7 @@ def _mean_px(particles: xt.Particles, dpx: float = 0) -> float:
     px: ArrayLike = particles.px[particles.state > 0]
     delta: ArrayLike = particles.delta[particles.state > 0]
     return float(nplike.mean(px - dpx * delta))
+
 
 def _mean_py(particles: xt.Particles, dpy: float = 0) -> float:
     """
