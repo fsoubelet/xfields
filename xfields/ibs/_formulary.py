@@ -14,7 +14,7 @@ from numpy.typing import ArrayLike
 LOGGER = logging.getLogger(__name__)
 
 
-def phi(beta: ArrayLike, alpha: ArrayLike, dx: ArrayLike, dpx: ArrayLike) -> ArrayLike:
+def phi(beta: ArrayLike, alpha: ArrayLike, dxy: ArrayLike, dpxy: ArrayLike) -> ArrayLike:
     """
     Computes the ``Phi`` parameter of Eq (15) in
     :cite:`PRAB:Nagaitsev:IBS_formulas_fast_numerical_evaluation`.
@@ -35,7 +35,7 @@ def phi(beta: ArrayLike, alpha: ArrayLike, dx: ArrayLike, dpx: ArrayLike) -> Arr
     phi : ArrayLike
         The ``Phi`` values through the machine.
     """
-    return dpx + alpha * dx / beta
+    return dpxy + alpha * dxy / beta
 
 
 # ----- Some helpers on xtrack.Particles objects ----- #
