@@ -215,33 +215,33 @@ class AnalyticalIBS(ABC):
         # ----------------------------------------------------------------------------------------------
         # Calculate transverse temperature as 2*P*X, i.e. assume the transverse energy is temperature/2
         # We need the total energy and the particle mass in GeV hence the 1e-9 below
-        mass0_GeV = self._particle.mass0 * 1e-9
-        gamma0 = self._twiss.gamma0
-        energy_GeV = self._particle.energy[0] * 1e-9
-        Etrans = 5e8 * (gamma0 * energy_GeV - mass0_GeV) * (gemitt_x / _bx_bar)
-        TempeV = 2.0 * Etrans
+        mass0_GeV: float = self._particle.mass0 * 1e-9
+        gamma0: float = self._twiss.gamma0
+        energy_GeV: float = self._particle.energy[0] * 1e-9
+        Etrans: float = 5e8 * (gamma0 * energy_GeV - mass0_GeV) * (gemitt_x / _bx_bar)
+        TempeV: float = 2.0 * Etrans
         # ----------------------------------------------------------------------------------------------
         # Compute sigmas in each dimension (start from sigma_delta to get sige needed in the formula)
-        sigma_x_cm = 100 * np.sqrt(gemitt_x * _bx_bar + (_dx_bar * sigma_delta * self._twiss.beta0**2) ** 2)
-        sigma_y_cm = 100 * np.sqrt(gemitt_y * _by_bar + (_dy_bar * sigma_delta * self._twiss.beta0**2) ** 2)
-        sigma_t_cm = 100 * bunch_length
+        sigma_x_cm: float = 100 * np.sqrt(gemitt_x * _bx_bar + (_dx_bar * sigma_delta * self._twiss.beta0**2) ** 2)
+        sigma_y_cm: float = 100 * np.sqrt(gemitt_y * _by_bar + (_dy_bar * sigma_delta * self._twiss.beta0**2) ** 2)
+        sigma_t_cm: float = 100 * bunch_length
         # ----------------------------------------------------------------------------------------------
         # Calculate beam volume to get density (in cm^{-3}), then Debye length
         if bunched is True:  # bunched beam
             volume = 8.0 * np.sqrt(np.pi**3) * sigma_x_cm * sigma_y_cm * sigma_t_cm
         else:  # coasting beam
             volume = 4.0 * np.pi * sigma_x_cm * sigma_y_cm * 100 * self._twiss.circumference
-        density = total_beam_intensity / volume
-        debye_length = 743.4 * np.sqrt(TempeV / density) / abs(self._particle.q0)
+        density: float = total_beam_intensity / volume
+        debye_length: float = 743.4 * np.sqrt(TempeV / density) / abs(self._particle.q0)
         # ----------------------------------------------------------------------------------------------
         # Calculate 'rmin' as larger of classical distance of closest approach or quantum mechanical
         # diffraction limit from nuclear radius. Particle mass needed in GeV hence the 1e-9 below
-        rmincl = 1.44e-7 * self._particle.q0**2 / TempeV
-        rminqm = hbar * c * 1e5 / (2.0 * np.sqrt(2e-3 * Etrans * self._particle.mass0 * 1e-9))
+        rmincl: float = 1.44e-7 * self._particle.q0**2 / TempeV
+        rminqm: float = hbar * c * 1e5 / (2.0 * np.sqrt(2e-3 * Etrans * self._particle.mass0 * 1e-9))
         # ----------------------------------------------------------------------------------------------
         # Now compute the impact parameters and finally Coulomb logarithm
-        bmin = max(rmincl, rminqm)
-        bmax = min(sigma_x_cm, debye_length)
+        bmin: float = max(rmincl, rminqm)
+        bmax: float = min(sigma_x_cm, debye_length)
         return np.log(bmax / bmin)
 
     @abstractmethod
