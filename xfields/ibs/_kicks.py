@@ -572,7 +572,7 @@ class IBSKineticKick(IBSKick):
         dx = self._twiss.dx
         # ----------------------------------------------------------------------------------------------
         # Compute the Coulomb logarithm and then the common constant term of Eq (45-50)
-        # TODO (Gianni): how do we deal with coasting beams? Can pass to Coulog but how to detect?
+        # NOTE: We can't detect a coasting beam in tracking, so here we assume bunched...
         coulomb_logarithm: float = BjorkenMtingwaIBS(self._twiss).coulomb_log(
             gemitt_x=gemitt_x,
             gemitt_y=gemitt_y,
