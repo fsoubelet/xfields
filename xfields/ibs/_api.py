@@ -9,7 +9,7 @@ import numpy as np
 import xtrack as xt
 
 from xfields.ibs._analytical import BjorkenMtingwaIBS, IBSGrowthRates, NagaitsevIBS
-from xfields.ibs._formulary import _beam_intensity, _bunch_length, _gemitt_x, _gemitt_y, _sigma_delta
+# from xfields.ibs._formulary import _beam_intensity, _bunch_length, _gemitt_x, _gemitt_y, _sigma_delta
 from xfields.ibs._kicks import IBSAnalyticalKick, IBSKick
 
 LOGGER = getLogger(__name__)
@@ -82,14 +82,14 @@ def get_intrabeam_scattering_growth_rates(
     # ----------------------------------------------------------------------------------------------
     # Perform checks on exclusive parameters: need either particles or all emittances, etc.
     if isinstance(particles, xt.Particles):
-        # TODO: wait for production-ready functionality from xtrack to handle this
+        # TODO (Gianni): wait for production-ready functionality from xtrack to handle this??
         raise NotImplementedError("Using provided xt.Particles is not yet implemented, please provide parameters.")
-        LOGGER.info("Will determine emittances, etc. from provided xt.Particles object")
-        gemitt_x = _gemitt_x(particles, twiss.betx[0], twiss.dx[0])
-        gemitt_y = _gemitt_y(particles, twiss.bety[0], twiss.dy[0])
-        sigma_delta = _sigma_delta(particles)
-        bunch_length = _bunch_length(particles)
-        total_beam_intensity = _beam_intensity(particles)
+        # LOGGER.info("Will determine emittances, etc. from provided xt.Particles object")
+        # gemitt_x = _gemitt_x(particles, twiss.betx[0], twiss.dx[0])
+        # gemitt_y = _gemitt_y(particles, twiss.bety[0], twiss.dy[0])
+        # sigma_delta = _sigma_delta(particles)
+        # bunch_length = _bunch_length(particles)
+        # total_beam_intensity = _beam_intensity(particles)
     else:
         LOGGER.info("Using explicitely provided parameters for emittances, etc.")
         assert total_beam_intensity is not None, "Must provide 'total_beam_intensity'"
