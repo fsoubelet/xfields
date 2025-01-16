@@ -38,7 +38,7 @@ def get_intrabeam_scattering_growth_rates(
 
     Parameters
     ----------
-    line : xtrack.Line
+    twiss : xtrack.TwissTable
         Line in which the IBS kick element will be installed.
     formalism : str
         Which formalism to use for the computation. Can be ``Nagaitsev``
