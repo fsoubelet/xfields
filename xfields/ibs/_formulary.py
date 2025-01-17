@@ -95,6 +95,22 @@ def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     deviation of the particle coordinates and then normalizes with
     Twiss parameters to take out the contribution of the dispersion
     at the given location.
+
+    Parameters
+    ----------
+    particles : xt.Particles
+        The particles object.
+    betx : float
+        Horizontal beta function at the location where the
+        emittance is computed.
+    dx : float
+        Horizontal momentum dispersion function at the location
+        where the emittance is computed.
+
+    Returns
+    -------
+    gemitt_x : float
+        The horizontal geometric emittance, in [m].
     """
     # Context check is performed in the called functions
     sigma_x = _sigma_x_from_stdev(particles)
@@ -112,6 +128,22 @@ def _gemitt_y(particles: xt.Particles, bety: float, dy: float) -> float:
     deviation of the particle coordinates and then normalizes with
     Twiss parameters to take out the contribution of the dispersion
     at the given location.
+
+    Parameters
+    ----------
+    particles : xt.Particles
+        The particles object.
+    bety : float
+        Vertical beta function at the location where the
+        emittance is computed.
+    dy : float
+        Vertical momentum dispersion function at the location
+        where the emittance is computed.
+
+    Returns
+    -------
+    gemitt_y : float
+        The vertical geometric emittance, in [m].
     """
     # Context check is performed in the called functions
     sigma_y = _sigma_y_from_stdev(particles)
