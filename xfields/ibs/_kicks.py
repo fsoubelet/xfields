@@ -28,8 +28,8 @@ from xfields.ibs._formulary import (
     _sigma_delta,
     _sigma_px,
     _sigma_py,
-    _sigma_x,
-    _sigma_y,
+    _sigma_x_from_stdev,
+    _sigma_y_from_stdev,
     phi,
 )
 
@@ -559,8 +559,13 @@ class IBSKineticKick(IBSKick):
         total_beam_intensity: float = _beam_intensity(particles)
         bunch_length: float = _bunch_length(particles)
         sigma_delta: float = _sigma_delta(particles)
-        sigma_x: float = _sigma_x(particles)
-        sigma_y: float = _sigma_y(particles)
+        # TODO: this is the sigma_[xy]_from_stdev
+        # TODO: from this compute _gemitt_[xy] compensating for D[xy] (use _gemitt_x)
+        # TODO: this means computing from the gemitt_[xy] just above
+        # TODO: THEN compute a new sigma_[xy] as sqrt(eps_[xy] * beta[xy]) and this is one is not from stdev and is compensated for Dx
+        # TODO: make a small notebook - check difference between these 2 sigmas - changing location of kick and get same diffusion / friction terms
+        sigma_x: float = _sigma_x_from_stdev(particles)
+        sigma_y: float = _sigma_y_from_stdev(particles)
         # ----------------------------------------------------------------------------------------------
         # Allocating some properties to simple variables for readability
         beta0: float = self._twiss.beta0
