@@ -110,7 +110,8 @@ def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     Returns
     -------
     gemitt_x : float
-        The horizontal geometric emittance, in [m].
+        The dispersion-compensated horizontal geometric emittance,
+        in [m].
     """
     # Context check is performed in the called functions
     sigma_x = _sigma_x_from_stdev(particles)
@@ -143,12 +144,71 @@ def _gemitt_y(particles: xt.Particles, bety: float, dy: float) -> float:
     Returns
     -------
     gemitt_y : float
-        The vertical geometric emittance, in [m].
+        The dispersion-compensated vertical geometric emittance,
+        in [m].
     """
     # Context check is performed in the called functions
     sigma_y = _sigma_y_from_stdev(particles)
     sig_delta = _sigma_delta(particles)
     return float((sigma_y**2 - (dy * sig_delta) ** 2) / bety)
+
+
+def _sigma_x_from_gemitt_x(gemitt_x: float, betx: float) -> float:
+    """
+    Compute the horizontal beam size (1 sigma) of the particles at
+    a location in the machine, from the dispersion-compensated
+    geometric emittance.
+
+    This assumes the emittance was computed with _gemitt_[xy] above.
+    The though process is to have a beam size influenced by the
+    dispersion at the location, from which we compute an emittance
+    for which the dispersion contribution is taken out. We then
+    compute back the beam size from this emittance and the beta
+    function to get the dispersion-compensated beam size.
+
+    Parameters
+    ----------
+    gemitt_x : float
+        The horizontal geometric emittance, in [m].
+    betx : float
+        Horizontal beta function at the location where the
+        beam size is computed.
+
+    Returns
+    -------
+    sigma_x : float
+        The dispersion-compensated horizontal beam size, in [m].
+    """
+    return (betx * gemitt_x) ** 0.5
+
+
+def _sigma_y_from_gemitt_y(gemitt_y: float, bety: float) -> float:
+    """
+    Compute the vertical beam size (1 sigma) of the particles at
+    a location in the machine, from the dispersion-compensated
+    geometric emittance.
+
+    This assumes the emittance was computed with _gemitt_[xy] above.
+    The though process is to have a beam size influenced by the
+    dispersion at the location, from which we compute an emittance
+    for which the dispersion contribution is taken out. We then
+    compute back the beam size from this emittance and the beta
+    function to get the dispersion-compensated beam size.
+
+    Parameters
+    ----------
+    gemitt_y : float
+        The vertical geometric emittance, in [m].
+    bety : float
+        Vertical beta function at the location where the
+        beam size is computed.
+
+    Returns
+    -------
+    sigma_x : float
+        The dispersion-compensated vertical beam size, in [m].
+    """
+    return (bety * gemitt_y) ** 0.5
 
 
 def _current_turn(particles: xt.Particles) -> int:
@@ -175,7 +235,7 @@ def _sigma_px(particles: xt.Particles, dpx: float = 0) -> float:
     dpx : float, optional
         Horizontal momentum dispersion function at the location
         where the sigma_px is computed. Defaults to 0.
-    
+
     Returns
     -------
     sigma_px : float
@@ -203,7 +263,7 @@ def _sigma_py(particles: xt.Particles, dpy: float = 0) -> float:
     dpy : float, optional
         Vertical momentum dispersion function at the location
         where the sigma_py is computed. Defaults to 0.
-    
+
     Returns
     -------
     sigma_py : float
@@ -282,6 +342,6 @@ def _assert_accepted_context(ctx: xo.context.XContext):
     wrong results when using boolean array masking, which we do to
     get the alive particles.
     """
-    assert not isinstance(ctx, xo.ContextPyopencl), (
-        "PyOpenCL context is not supported for IBS. Please use either the CPU or CuPy context."
-    )
+    assert not isinstance(
+        ctx, xo.ContextPyopencl
+    ), "PyOpenCL context is not supported for IBS. Please use either the CPU or CuPy context."
