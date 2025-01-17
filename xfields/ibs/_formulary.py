@@ -65,10 +65,7 @@ def _sigma_delta(particles: xt.Particles) -> float:
     return float(nplike.std(particles.delta[particles.state > 0]))
 
 
-# TODO: this is skewed by the Dy where we compute
-# Use compiled code to query the current value?
-# (See Frederik code from xcoll? Would duplicate code)
-def _sigma_x(particles: xt.Particles) -> float:
+def _sigma_x_from_stdev(particles: xt.Particles) -> float:
     """
     Get the horizontal coordinate standard deviation
     from the particles.
@@ -78,10 +75,7 @@ def _sigma_x(particles: xt.Particles) -> float:
     return float(nplike.std(particles.x[particles.state > 0]))
 
 
-# TODO: this is skewed by the Dy where we compute
-# Use compiled code to query the current value?
-# (See Frederik code from xcoll? Would duplicate code)
-def _sigma_y(particles: xt.Particles) -> float:
+def _sigma_y_from_stdev(particles: xt.Particles) -> float:
     """
     Get the vertical coordinate standard deviation
     from the particles.
@@ -93,30 +87,34 @@ def _sigma_y(particles: xt.Particles) -> float:
 
 def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     """
-    Horizontal geometric emittance at a location in the machine,
-    for the beta and dispersion functions at this location. This
-    computes the hozirontal beam size sigma_x as the standard
-    deviation of the particle coordinates and then normalizes
-    with Twiss parameters to take out the contribution of the
-    dispersion at the given location.
+    Compute the horizontal geometric emittance of the particles at
+    a location in the machine, for the beta and dispersion functions
+    at this location.
+
+    This computes the hozirontal beam size sigma_x as the standard
+    deviation of the particle coordinates and then normalizes with
+    Twiss parameters to take out the contribution of the dispersion
+    at the given location.
     """
     # Context check is performed in the called functions
-    sigma_x = _sigma_x(particles)
+    sigma_x = _sigma_x_from_stdev(particles)
     sig_delta = _sigma_delta(particles)
     return float((sigma_x**2 - (dx * sig_delta) ** 2) / betx)
 
 
 def _gemitt_y(particles: xt.Particles, bety: float, dy: float) -> float:
     """
-    Vertical geometric emittance at a location in the machine,
-    for the beta and dispersion functions at this location. This
-    computes the hozirontal beam size sigma_x as the standard
-    deviation of the particle coordinates and then normalizes
-    with Twiss parameters to take out the contribution of the
-    dispersion at the given location.
+    Compute the vertical geometric emittance of the particles at a
+    location in the machine, for the beta and dispersion functions
+    at this location.
+
+    This computes the vertical beam size sigma_y as the standard
+    deviation of the particle coordinates and then normalizes with
+    Twiss parameters to take out the contribution of the dispersion
+    at the given location.
     """
     # Context check is performed in the called functions
-    sigma_y = _sigma_y(particles)
+    sigma_y = _sigma_y_from_stdev(particles)
     sig_delta = _sigma_delta(particles)
     return float((sigma_y**2 - (dy * sig_delta) ** 2) / bety)
 
