@@ -91,12 +91,14 @@ def _sigma_y(particles: xt.Particles) -> float:
     return float(nplike.std(particles.y[particles.state > 0]))
 
 
-# TODO: this uses skewed sigma_x calculation (see above)
-# Use the compiled version of Frederik from xcoll? Would duplicate code
 def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     """
     Horizontal geometric emittance at a location in the machine,
-    for the beta and dispersion functions at this location.
+    for the beta and dispersion functions at this location. This
+    computes the hozirontal beam size sigma_x as the standard
+    deviation of the particle coordinates and then normalizes
+    with Twiss parameters to take out the contribution of the
+    dispersion at the given location.
     """
     # Context check is performed in the called functions
     sigma_x = _sigma_x(particles)
@@ -104,12 +106,14 @@ def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
     return float((sigma_x**2 - (dx * sig_delta) ** 2) / betx)
 
 
-# TODO: this uses skewed sigma_y calculation (see above)
-# Use the compiled version of Frederik from xcoll? Would duplicate code
 def _gemitt_y(particles: xt.Particles, bety: float, dy: float) -> float:
     """
     Vertical geometric emittance at a location in the machine,
-    for the beta and dispersion functions at this location.
+    for the beta and dispersion functions at this location. This
+    computes the hozirontal beam size sigma_x as the standard
+    deviation of the particle coordinates and then normalizes
+    with Twiss parameters to take out the contribution of the
+    dispersion at the given location.
     """
     # Context check is performed in the called functions
     sigma_y = _sigma_y(particles)
