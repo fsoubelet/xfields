@@ -47,15 +47,21 @@ def phi(beta: ArrayLike, alpha: ArrayLike, dx: ArrayLike, dpx: ArrayLike) -> Arr
 def _beam_intensity(particles: xt.Particles) -> float:
     """Get the beam intensity from the particles."""
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
-    return float(nplike.sum(particles.weight[particles.state > 0]))
+    intensity = float(nplike.sum(particles.weight[particles.state > 0]))
+    particles.unhide_lost_particles()
+    return intensity
 
 
 def _bunch_length(particles: xt.Particles) -> float:
     """Get the bunch length from the particles."""
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
-    return float(nplike.std(particles.zeta[particles.state > 0]))
+    bunch_length = float(nplike.std(particles.zeta[particles.state > 0]))
+    particles.unhide_lost_particles()
+    return bunch_length
 
 
 def _sigma_delta(particles: xt.Particles) -> float:
@@ -64,8 +70,11 @@ def _sigma_delta(particles: xt.Particles) -> float:
     from the particles.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
-    return float(nplike.std(particles.delta[particles.state > 0]))
+    sigma_delta = float(nplike.std(particles.delta[particles.state > 0]))
+    particles.unhide_lost_particles()
+    return sigma_delta
 
 
 def _sigma_x(particles: xt.Particles) -> float:
@@ -74,8 +83,11 @@ def _sigma_x(particles: xt.Particles) -> float:
     from the particles.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
-    return float(nplike.std(particles.x[particles.state > 0]))
+    sigma_x = float(nplike.std(particles.x[particles.state > 0]))
+    particles.unhide_lost_particles()
+    return sigma_x
 
 
 def _sigma_y(particles: xt.Particles) -> float:
@@ -84,8 +96,11 @@ def _sigma_y(particles: xt.Particles) -> float:
     from the particles.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
-    return float(nplike.std(particles.y[particles.state > 0]))
+    sigma_y =  float(nplike.std(particles.y[particles.state > 0]))
+    particles.unhide_lost_particles()
+    return sigma_y
 
 
 def _gemitt_x(particles: xt.Particles, betx: float, dx: float) -> float:
@@ -116,7 +131,10 @@ def _current_turn(particles: xt.Particles) -> int:
     the alive particles.
     """
     _assert_accepted_context(particles._context)
-    return int(particles.at_turn[particles.state > 0][0])
+    particles.hide_lost_particles()
+    turn = int(particles.at_turn[particles.state > 0][0])
+    particles.unhide_lost_particles()
+    return turn
 
 
 def _sigma_px(particles: xt.Particles, dpx: float = 0) -> float:
@@ -141,10 +159,13 @@ def _sigma_px(particles: xt.Particles, dpx: float = 0) -> float:
         The standard deviation of the horizontal momentum.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
     px: ArrayLike = particles.px[particles.state > 0]
     delta: ArrayLike = particles.delta[particles.state > 0]
-    return float(nplike.std(px - dpx * delta))
+    sigma_px = float(nplike.std(px - dpx * delta))
+    particles.unhide_lost_particles()
+    return sigma_px
 
 
 def _sigma_py(particles: xt.Particles, dpy: float = 0) -> float:
@@ -169,10 +190,13 @@ def _sigma_py(particles: xt.Particles, dpy: float = 0) -> float:
         The standard deviation of the vertical momentum.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
     py: ArrayLike = particles.py[particles.state > 0]
     delta: ArrayLike = particles.delta[particles.state > 0]
-    return float(nplike.std(py - dpy * delta))
+    sigma_py = float(nplike.std(py - dpy * delta))
+    particles.unhide_lost_particles()
+    return sigma_py
 
 
 def _mean_px(particles: xt.Particles, dpx: float = 0) -> float:
@@ -197,10 +221,13 @@ def _mean_px(particles: xt.Particles, dpx: float = 0) -> float:
         The arithmetic mean of the horizontal momentum.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
     px: ArrayLike = particles.px[particles.state > 0]
     delta: ArrayLike = particles.delta[particles.state > 0]
-    return float(nplike.mean(px - dpx * delta))
+    mean_px = float(nplike.mean(px - dpx * delta))
+    particles.unhide_lost_particles()
+    return mean_px
 
 
 def _mean_py(particles: xt.Particles, dpy: float = 0) -> float:
@@ -225,10 +252,13 @@ def _mean_py(particles: xt.Particles, dpy: float = 0) -> float:
         The arithmetic mean of the horizontal momentum.
     """
     _assert_accepted_context(particles._context)
+    particles.hide_lost_particles()
     nplike = particles._context.nplike_lib
     py: ArrayLike = particles.py[particles.state > 0]
     delta: ArrayLike = particles.delta[particles.state > 0]
-    return float(nplike.mean(py - dpy * delta))
+    mean_py = float(nplike.mean(py - dpy * delta))
+    particles.unhide_lost_particles()
+    return mean_py
 
 
 # ----- Private helper to check the validity of the context ----- #
